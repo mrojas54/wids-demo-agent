@@ -1,0 +1,17 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "wids-ai-agents"
+	},
+	{
+		"path": "wids-agent-api"
+	},
+	{
+		"path": "wids-agent-ui"
+	}
+],
+  "settings": {}
+}
