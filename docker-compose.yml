@@ -1,0 +1,27 @@
+services:
+  web:
+    build:
+      context: ./wids-agent-api
+      dockerfile: ./Dockerfile
+    command: fastapi run app/main.py --port 8000
+    volumes:
+      - ./wids-agent-api/app:/app
+    ports:
+      - "8004:8000"
+    environment:
+      - ENVIRONMENT=dev
+      - TESTING=0
+      - DATABASE_URL=postgres://postgres:supersecretpassword@web-db:5432/web_dev
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - web-db
+
+  web-db:
+    build:
+      context: ./wids-agent-api/db
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword

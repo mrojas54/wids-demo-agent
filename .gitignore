@@ -1,0 +1,32 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Environments
+.venv
+.env
+
+# Unit test / coverage reports
+.coverage
+.pytest_cache
+
+# Python
+.python-version
+
+# Editor
+.idea/*
+.vscode/*
+.DS_Store
+
+# Formatter
+.ruff_cache
+
+# Logs
+logs/*
+*.log
+*.log.*
+*.log.*.*
