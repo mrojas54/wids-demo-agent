@@ -5,8 +5,6 @@
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS builder
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
-RUN apt-get update && apt-get install -y gcc
-
 # Disable Python downloads, because we want to use the system interpreter
 # across both images. If using a managed Python version, it needs to be
 # copied from the build image into the final image; see `standalone.Dockerfile`
@@ -33,6 +31,11 @@ FROM python:3.13-slim-bookworm
 # It is important to use the image that matches the builder, as the path to the
 # Python executable must be the same, e.g., using `python:3.11-slim-bookworm`
 # will fail.
+
+
+RUN apt-get update \
+    && apt-get install -y netcat-traditional gcc postgresql \
+    && apt-get clean
 
 # Copy the application from the builder
 COPY --from=builder --chown=app:app /app /app

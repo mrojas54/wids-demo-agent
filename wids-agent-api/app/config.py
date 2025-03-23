@@ -3,7 +3,6 @@ import logging
 import pathlib
 from functools import lru_cache
 
-from pydantic import AnyUrl
 from pydantic_settings import BaseSettings
 
 
@@ -26,7 +25,9 @@ def get_settings() -> BaseSettings:
 class BaseConfig(BaseSettings):
     BASE_DIR: pathlib.Path = pathlib.Path(__file__).parent.parent
 
-    DATABASE_URL: str = os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR}/db.sqlite3")
+    DATABASE_URL: str = os.environ.get(
+        "DATABASE_URL", f"sqlite:///{BASE_DIR}/db.sqlite3"
+    )
     DATABASE_CONNECT_DICT: dict = {}
 
 

@@ -1,6 +1,5 @@
 from openai import AsyncOpenAI
 
-from app.config import get_settings
 from app.utils.constants import MODEL_NAME
 
 
@@ -8,7 +7,9 @@ async def get_llm_client(openai_api_key: str) -> AsyncOpenAI:
     return AsyncOpenAI(api_key=openai_api_key)
 
 
-async def get_test_chat(client: AsyncOpenAI, input: str, model_name: str = MODEL_NAME) -> str:
+async def get_test_chat(
+    client: AsyncOpenAI, input: str, model_name: str = MODEL_NAME
+) -> str:
     generate_story_prompt = """
     You are a loving mother spending time wih her sleepy baby. Your son loves 
     knights, castles, and fighting dragons. Create a bedtime story where the 

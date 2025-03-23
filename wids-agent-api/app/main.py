@@ -19,7 +19,7 @@ logger = logging.getLogger("cool.api")
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Starting up...")
     async with register_orm(app):
-        yield
+        yield {"chat_sessions": {}}
     logger.info("Shutting down...")
 
 

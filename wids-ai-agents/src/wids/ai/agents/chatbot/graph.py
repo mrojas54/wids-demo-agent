@@ -1,13 +1,14 @@
 from IPython.display import Image, display
-from typing import Optional
+from typing import Optional, List
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START
+from langchain_core.messages import AnyMessage
 from langchain_core.runnables import RunnableConfig
 
-from agents.chatbot.node import ChatbotNode
-from agents.chatbot.state import ChatbotState
-from agents.chatbot.utils.constants import MODEL_NAME, SYSTEM_PROMPT
+from wids.ai.agents.chatbot.node import ChatbotNode
+from wids.ai.agents.chatbot.state import ChatbotState
+from wids.ai.agents.chatbot.utils.constants import MODEL_NAME, SYSTEM_PROMPT
 
 
 class ChatbotGraph:
@@ -40,5 +41,12 @@ class ChatbotGraph:
     def display(self):
         display(Image(self.graph.get_graph(xray=True).draw_mermaid_png()))
 
-    def invoke(self, input: str, config: Optional[RunnableConfig] = None):
+    def invoke(
+        self, input: str, config: Optional[RunnableConfig] = None
+    ) -> List[AnyMessage]:
         return self.graph.invoke(input, config)
+
+    async def ainvoke(
+        self, input: str, config: Optional[RunnableConfig] = None
+    ) -> List[AnyMessage]:
+        return await self.graph.ainvoke(input, config)
