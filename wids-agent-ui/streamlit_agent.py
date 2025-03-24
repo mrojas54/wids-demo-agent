@@ -1,14 +1,14 @@
 import asyncio
 import os
-
+import uuid
 import streamlit as st
 from dotenv import load_dotenv
-from langchain.memory import ConversationBufferMemory
+from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_community.chat_message_histories.streamlit import (
     StreamlitChatMessageHistory,
 )
-from wids.ai.agents.chatbot.graph import ChatbotGraph
+from wids.ai.agents.analyst_agent.graph import build_graph
 from wids.ai.agents.chatbot.utils.constants import (
     MODEL_NAME,
 )
@@ -20,16 +20,8 @@ from utils.st_callable_util import (
 load_dotenv()
 
 st.title("StreamLit 🤝 LangGraph")
-st.markdown("#### StreamlitCallBackHandler Full Implementation")
+st.markdown("#### Secret Agent Demo")
 
-# st write magic
-"""
-In this example, we're going to be using the official [`StreamlitCallbackHandler`](https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.streamlit.streamlit_callback_handler.StreamlitCallbackHandler.html) 
-within [_LangGraph_](https://langchain-ai.github.io/langgraph/) by leveraging callbacks in our 
-graph's [`RunnableConfig`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html).
-
----
-"""
 
 # Check if the API key is available as an environment variable
 if not os.getenv("OPENAI_API_KEY"):
@@ -44,16 +36,16 @@ if not os.getenv("OPENAI_API_KEY"):
         st.info("Please enter your OPENAI_API_KEY in the sidebar.")
         st.stop()
 
-if "memory" not in st.session_state:
-    st.session_state["memory"] = ConversationBufferMemory(
-        memory_key="langchain_chat_history",
-        chat_memory=StreamlitChatMessageHistory(),
-        return_messages=True,
-    )
-if "graph" not in st.session_state:
-    st.session_state.graph = ChatbotGraph(model_name=MODEL_NAME, temperature=0.7)
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = str(uuid.uuid4())
 
-message_history = st.session_state["memory"].chat_memory
+if "memory" not in st.session_state:
+    st.session_state.memory = MemorySaver()
+
+if "graph" not in st.session_state:
+    st.session_state.graph = build_graph(st.session_state.memory)
+
+message_history = StreamlitChatMessageHistory(key="langchain_messages")
 memory = st.session_state["memory"]
 if len(message_history.messages) == 0 or st.sidebar.button("Clear message history"):
     message_history.clear()
@@ -79,7 +71,10 @@ if prompt := st.chat_input(placeholder="Ask me anything..."):
         response = asyncio.run(
             st.session_state.graph.ainvoke(
                 input={"messages": [{"role": "user", "content": prompt}]},
-                config={"callbacks": [st_callback], "configurable": {"thread_id": 1}},
+                config={
+                    "callbacks": [st_callback],
+                    "configurable": {"thread_id": st.session_state.thread_id},
+                },
             )
         )
         last_msg = response["messages"][-1].content

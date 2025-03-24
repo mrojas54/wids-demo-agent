@@ -1,0 +1,9 @@
+{
+  "dockerfile_lines": [],
+  "graphs": {
+    "open_deep_research": "/Users/michellerojas/pydata/virginia2025/wids-demo-agent/wids-ai-agents/src/wids/ai/agents/analyst_agent/graph.py:graph"
+  },
+  "python_version": "3.13",
+  "env": "./.env",
+  "dependencies": ["."]
+}

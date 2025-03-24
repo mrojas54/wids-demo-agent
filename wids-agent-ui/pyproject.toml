@@ -6,6 +6,10 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "langchain-community>=0.3.20",
+    "matplotlib>=3.10.1",
+    "python-pptx>=1.0.2",
+    "scikit-learn>=1.6.1",
+    "seaborn>=0.13.2",
     "streamlit>=1.43.2",
     "watchdog>=6.0.0",
     "wids-ai-agents",
