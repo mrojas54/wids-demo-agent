@@ -9,7 +9,7 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.types import Command
 from typing_extensions import TypedDict
 
-from wids.ai.agents.analyst_agent.tools import perform_eda, presentation, train_model
+from wids.ai.agents.analyst_agent.tools import perform_eda, presentation_tool, train_model
 
 # Our team supervisor is an LLM node. It just picks the next agent to process
 # and decides when the work is completed
@@ -103,7 +103,7 @@ def scientist_node(state: AgentState) -> Command[Literal["supervisor"]]:
 # Create reporter Sub-Agent
 reporter_agent = create_react_agent(
     llm,
-    tools=[presentation],
+    tools=[presentation_tool],
     state_modifier="""You are a reporter who makes presentations. You create presentations for executives.
                      Take the scientist's analysis and build a powerpoint presentation summarizing the key findings.
                      You MUST use the content from the data scientist.

@@ -81,6 +81,6 @@ if prompt := st.chat_input(placeholder="Ask me anything..."):
         message_history.messages.append(
             AIMessage(content=last_msg)
         )  # Add that last message to the st_message_state
-        msg_placeholder.write(
-            last_msg
-        )  # visually refresh the complete response after the callback container
+        # msg_placeholder.write(
+        #     last_msg
+        # )  # visually refresh the complete response after the callback container

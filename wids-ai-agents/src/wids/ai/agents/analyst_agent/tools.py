@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -11,7 +12,7 @@ def perform_eda() -> str:
     """Perform exploratory data analysis on the diabetes dataset."""
 
     df = pd.read_csv(
-        "/Users/michellerojas/pydata/virginia2025/wids-demo-agent/wids-ai-agents/src/wids/ai/agents/analyst_agent/diabetes.csv"
+       "/Users/michellerojas/pydata/virginia2025/wids-demo-agent/wids-ai-agents/src/wids/ai/agents/analyst_agent/diabetes.csv"
     )
 
     # Basic statistics
@@ -97,7 +98,7 @@ def train_model():
 
 
 @tool
-def presentation(content: str, theme_path: str = None):
+def presentation_tool(content: str, theme_path: str = "presenter_theme.pptx"):
     """
     Build a PowerPoint presentation with a background theme.
 
@@ -105,70 +106,17 @@ def presentation(content: str, theme_path: str = None):
         content: Text content to include in the presentation.
         theme_path: (Optional) Path to a PowerPoint theme/template (.pptx) file.
     """
+    from wids.ai.agents.analyst_agent.custom_tools.presenter import generate_presentation
+  
     try:
-        import os
-        from pptx import Presentation
-        from pptx.util import Inches, Pt
-        from pptx.dml.color import RGBColor
-
-        # Load a presentation with a theme if provided, else create a new one
-        if theme_path and os.path.exists(theme_path):
-            prs = Presentation(theme_path)
-        else:
-            prs = Presentation()
-
-        def add_content_slide(prs, title_text, content_text):
-            """Adds a slide with the given title and content while keeping the theme formatting."""
-            slide_layout = prs.slide_layouts[1]  # Title and Content Layout
-            slide = prs.slides.add_slide(slide_layout)
-
-            title = slide.shapes.title
-            title.text = title_text
-            title.text_frame.paragraphs[0].font.bold = True
-            title.text_frame.paragraphs[0].font.size = Pt(32)
-
-            # Add text content
-            text_box = slide.shapes.add_textbox(
-                Inches(1), Inches(1.5), Inches(8), Inches(5)
-            )
-            text_frame = text_box.text_frame
-            text_frame.word_wrap = True
-            text_box.line.fill.background()  # Removes outline
-
-            for paragraph in content_text.split("\n"):
-                p = text_frame.add_paragraph()
-                p.text = paragraph
-                p.font.size = Pt(20)
-
-        # Add a title slide
-        title_slide_layout = prs.slide_layouts[0]
-        slide = prs.slides.add_slide(title_slide_layout)
-        slide.shapes.title.text = "Diabetes Prediction"
-        slide.placeholders[1].text = "Agent Workflow"
-
-        # Split content into smaller parts
-        max_chars_per_slide = 500
-        chunks = [
-            content[i : i + max_chars_per_slide]
-            for i in range(0, len(content), max_chars_per_slide)
-        ]
-
-        # Add slides dynamically
-        for i, chunk in enumerate(chunks):
-            add_content_slide(prs, f"About Data (Part {i+1})", chunk)
-
-        # Save presentation
-        file_path = os.path.abspath("diabetes_presentation.pptx")
-        prs.save(file_path)
-
+        file_path = generate_presentation(content, theme_path)
+        print(f"Presentation created successfully at {file_path}")
         return {
             "status": "success",
             "message": f"Presentation created successfully at {file_path}",
-            "file_path": file_path,
+            "file_path": file_path
         }
 
     except Exception as e:
-        return {
-            "status": "error",
-            "message": f"Failed to create presentation: {str(e)}",
-        }
+        raise e
+
