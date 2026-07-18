@@ -6,7 +6,7 @@ authors = [{ name = "Michelle Rojas", email = "michelle.rojas@graphika.com" }]
 readme = "README.md"
 requires-python = ">=3.12,<4.0.0"
 dependencies = [
-  "streamlit (>=1.43.2,<2.0.0)",
+  "streamlit (>=1.54.0,<2.0.0)",
   "openai (>=1.66.3,<2.0.0)",
   "langgraph (>=0.3.11,<0.4.0)",
   "langchain-openai (>=0.3.9,<0.4.0)",
